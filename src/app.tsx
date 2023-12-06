@@ -97,27 +97,18 @@ async function fetchSpotifyPlaylistURI(genre: string): Promise<SpotifyApi.Single
 	return;
 }
 
-function createPlaylistContainer(playlist: SpotifyApi.PlaylistObjectFull): HTMLAnchorElement {
-	let playlistContainer = document.createElement("a");
-	playlistContainer.className = "playlist-description-container";
-	playlistContainer.href = playlist.uri;
-	playlistContainer.appendChild(createPlaylistImage(playlist));
-	playlistContainer.appendChild(createPlaylistDescription(playlist));
-	return playlistContainer;
-}
-
-function createPlaylistImage(playlist: SpotifyApi.PlaylistObjectFull): HTMLImageElement {
-	let playlistImage = document.createElement("img");
-	playlistImage.src = playlist.images[0].url;
-	playlistImage.className = "main-entityHeader-image playlist-image";
-	return playlistImage;
-}
-
-function createPlaylistDescription(playlist: SpotifyApi.PlaylistObjectFull): HTMLDivElement {
-	let playlistDescription = document.createElement("div");
-	playlistDescription.innerHTML = `
-		<h1 class="playlist-title">${playlist.name}</h1>
-		<p class="playlist-description">${playlist.owner.display_name} • ${playlist.followers.total} likes • ${playlist.tracks.total} songs</p>
+function createPlaylistContainer(playlist: SpotifyApi.PlaylistObjectFull): HTMLDivElement {
+	let playlistContainer = document.createElement("div");
+	playlistContainer.innerHTML = `
+		<a href=${playlist.uri} onclick="Spicetify.PopupModal.hide()" class="playlist-description-container">
+			<img src="${playlist.images[0].url}" class="playlist-image" />
+			<div class="playlist-description">
+				<h1 class="playlist-title">${playlist.name}</h1>
+				<p class="playlist-stats">
+					${playlist.owner.display_name} • ${playlist.followers.total} likes • ${playlist.tracks.total} songs
+				</p>
+			</div>
+		</a>
 	`;
-	return playlistDescription;
+	return playlistContainer;
 }

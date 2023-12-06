@@ -29,17 +29,25 @@
 		.playlist-image {
 			width: 70px;
 			height: 70px;
-		}
-
-		.playlist-title {
-			font-size: 1.75em;
-			font-weight: 900;
-			line-height: 1.2em;
+			border-radius: 4px;
 		}
 
 		.playlist-description {
-			font-size: 0.875rem;
-			color: rgba(var(--spice-rgb-selected-row), 0.7);
+			overflow: hidden;
+
+			.playlist-title {
+				font-size: 1.5em;
+				font-weight: 900;
+				line-height: 1.2em;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+
+			.playlist-stats {
+				font-size: 0.875rem;
+				color: rgba(var(--spice-rgb-selected-row), 0.7);
+			}
 		}
 	}
 }
