@@ -3,3 +3,43 @@
 	flex-wrap: wrap;
 	gap: 0px 8px;
 }
+
+.genre-tag {
+	&:hover {
+		color: var(--spice-text);
+		text-decoration: underline;
+		cursor: pointer;
+	}
+}
+
+.genre-description-container {
+	.playlist-description-container {
+		display: flex;
+		gap: 12px;
+		align-items: center;
+		padding: 8px;
+		border-radius: 6px;
+
+		&:hover {
+			background-color: var(--spice-highlight);
+			cursor: pointer;
+			text-decoration: none;
+		}
+
+		.playlist-image {
+			width: 70px;
+			height: 70px;
+		}
+
+		.playlist-title {
+			font-size: 1.75em;
+			font-weight: 900;
+			line-height: 1.2em;
+		}
+
+		.playlist-description {
+			font-size: 0.875rem;
+			color: rgba(var(--spice-rgb-selected-row), 0.7);
+		}
+	}
+}
