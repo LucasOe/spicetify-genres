@@ -99,6 +99,7 @@ async function createContent(data: MusicalystData, playlist: SpotifyApi.Playlist
 	let contentContainer = document.createElement("div");
 	contentContainer.className = "genre-description-container";
 	contentContainer.appendChild(await createDescription(data));
+	contentContainer.appendChild(await createRelated(data));
 	contentContainer.appendChild(await createPlaylist(playlist));
 	contentContainer.appendChild(await createTopArtists(data));
 	return contentContainer;
@@ -106,10 +107,25 @@ async function createContent(data: MusicalystData, playlist: SpotifyApi.Playlist
 
 async function createDescription(data: MusicalystData): Promise<HTMLDivElement> {
 	let descriptionContainer = document.createElement("div");
-	descriptionContainer.innerHTML = `
-		<p>${data.genresAdvancedInfo.description}</p>
-	`;
+	descriptionContainer.innerHTML = `<p>${data.genresAdvancedInfo.description}</p>`;
 	return descriptionContainer;
+}
+
+async function createRelated(data: MusicalystData): Promise<HTMLDivElement> {
+	let genreContainer = document.createElement("div");
+	genreContainer.className = "related-genres-container";
+	data.relatedGenres.forEach((relatedGenre) => {
+		let genreTag = document.createElement("a");
+		genreTag.className = "TypeElement-finale-textSubdued-type genre-tag";
+		genreTag.innerHTML = camelize(relatedGenre.genre);
+		genreTag.onclick = async () => {
+			await clickGenreTag(relatedGenre.genre);
+		};
+
+		genreContainer.appendChild(genreTag);
+	});
+
+	return genreContainer;
 }
 
 async function createPlaylist(playlist: SpotifyApi.PlaylistObjectFull): Promise<HTMLDivElement> {

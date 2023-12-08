@@ -27,6 +27,12 @@
 		flex-direction: column;
 	}
 
+	.related-genres-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0px 12px;
+	}
+
 	.playlist-container {
 		display: flex;
 		gap: 12px;
