@@ -35,3 +35,7 @@ export async function waitForElement(selector: string, timeout: number | undefin
 export function camelize(str: string): string {
 	return str.replace(/(^\w{1})|(\s+\w{1})/g, (c) => c.toUpperCase());
 }
+
+export function replaceAll(str: string, find: string, replace: string) {
+	return str.replace(new RegExp(find, "g"), replace);
+}
