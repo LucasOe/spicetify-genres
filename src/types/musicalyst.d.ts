@@ -2,6 +2,7 @@ export type MusicalystData = {
 	genreid: string;
 	genresAdvancedInfo: GenresAdvancedInfo;
 	topArtists: TopArtists[];
+	relatedGenres: RelatedGenres[];
 };
 
 export type GenresAdvancedInfo = {
@@ -21,4 +22,9 @@ export type TopArtistsImage = {
 	width: number;
 	height: number;
 	url: string;
+};
+
+export type RelatedGenres = {
+	genre: string;
+	count: string;
 };
