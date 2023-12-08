@@ -4,12 +4,10 @@
 	gap: 0px 8px;
 }
 
-.genre-tag {
-	&:hover {
-		color: var(--spice-text);
-		text-decoration: underline;
-		cursor: pointer;
-	}
+.genre-tag:hover {
+	color: var(--spice-text);
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 .main-embedWidgetGenerator-container {
@@ -31,6 +29,10 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0px 12px;
+
+		.genre-tag {
+			color: rgba(var(--spice-rgb-selected-row), 0.7) !important;
+		}
 	}
 
 	.playlist-container {
