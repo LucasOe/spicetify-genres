@@ -60,9 +60,8 @@ async function fetchGenres(artistURI: string): Promise<string[]> {
 
 async function clickGenreTag(genre: string) {
 	let playlist = await fetchSpotifyPlaylistURI(genre);
-	if (!playlist) return;
-
 	let data = await fetchMusicalyst(genre);
+	if (!data) return;
 
 	Spicetify.PopupModal.display({
 		title: camelize(genre),
@@ -71,12 +70,17 @@ async function clickGenreTag(genre: string) {
 	});
 }
 
-async function fetchMusicalyst(genre: string): Promise<MusicalystData> {
-	let url = `https://serena-williams-certified-moment.github.io/gay-furry-porn/${replaceAll(genre, " ", "-")}.json`;
-	console.log(url);
-	let initialRequest = await fetch(url);
-	let response = await initialRequest.json();
-	return response.pageProps;
+async function fetchMusicalyst(genre: string): Promise<MusicalystData | void> {
+	let escaped = replaceAll(replaceAll(genre, " ", "-"), ":", "");
+	let url = `https://serena-williams-certified-moment.github.io/gay-furry-porn/${escaped}.json`;
+	try {
+		let initialRequest = await fetch(url);
+		let response = await initialRequest.json();
+		return response.pageProps;
+	} catch {
+		Spicetify.showNotification(`Couldn't find genre on Musicalyst: ${genre}`);
+		return;
+	}
 }
 
 async function fetchSpotifyPlaylistURI(genre: string): Promise<SpotifyApi.SinglePlaylistResponse | void> {
@@ -95,12 +99,15 @@ async function fetchSpotifyPlaylistURI(genre: string): Promise<SpotifyApi.Single
 	return;
 }
 
-async function createContent(data: MusicalystData, playlist: SpotifyApi.PlaylistObjectFull): Promise<HTMLDivElement> {
+async function createContent(
+	data: MusicalystData,
+	playlist: SpotifyApi.PlaylistObjectFull | void
+): Promise<HTMLDivElement> {
 	let contentContainer = document.createElement("div");
 	contentContainer.className = "genre-description-container";
 	contentContainer.appendChild(await createDescription(data));
 	contentContainer.appendChild(await createRelated(data));
-	contentContainer.appendChild(await createPlaylist(playlist));
+	if (playlist) contentContainer.appendChild(await createPlaylist(playlist));
 	contentContainer.appendChild(await createTopArtists(data));
 	return contentContainer;
 }
