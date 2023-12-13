@@ -47,7 +47,7 @@ async function injectGenres(genreContainer: HTMLDivElement) {
 
 function getArtistsURI(): string | null {
 	let data = Spicetify.Player.data;
-	if (!Spicetify.Player.data) return null;
+	if (!data) return null;
 	return data.item.metadata.artist_uri.split(":")[2];
 }
 
@@ -137,7 +137,7 @@ async function createRelated(data: MusicalystData): Promise<HTMLDivElement> {
 
 async function createPlaylist(playlist: SpotifyApi.PlaylistObjectFull): Promise<HTMLDivElement> {
 	let playlistContainer = document.createElement("div");
-	playlistContainer.innerHTML = `
+	playlistContainer.innerHTML = /* HTML */ `
 		<a href=${playlist.uri} onclick="Spicetify.PopupModal.hide()" class="playlist-container">
 			<img src="${playlist.images[0].url}" class="playlist-image" />
 			<div class="playlist-description">
@@ -156,18 +156,18 @@ async function createTopArtists(data: MusicalystData): Promise<HTMLDivElement> {
 		let result = "";
 		data.topArtists.forEach(async (artist) => {
 			let artistURI = `spotify:artist:${artist.id}`;
-			result += `
+			result += /* HTML */ `
 				<a href=${artistURI} onclick="Spicetify.PopupModal.hide()" class="main-card-card">
 					<div class="main-cardImage-imageWrapper">
-						<img 
-							class="main-image-image main-cardImage-image" 
-							draggable=false
-							loading="lazy" 
+						<img
+							class="main-image-image main-cardImage-image"
+							draggable="false"
+							loading="lazy"
 							src="${artist.images[2].url}"
 						/>
 					</div>
 					<div class="main-cardHeader-text TypeElement-balladBold-textBase-type-paddingBottom_4px">
-					    ${artist.name}
+						${artist.name}
 					</div>
 				</a>
 			`;
@@ -176,12 +176,10 @@ async function createTopArtists(data: MusicalystData): Promise<HTMLDivElement> {
 	};
 
 	let topArtistsContainer = document.createElement("div");
-	topArtistsContainer.innerHTML = `
+	topArtistsContainer.innerHTML = /* HTML */ `
 		<div class="description-container">
 			<h3 class="main-type-alto" as="h3">Top Artists</h3>
-			<div class="main-gridContainer-gridContainer">
-				${artists()}
-			</div>
+			<div class="main-gridContainer-gridContainer">${artists()}</div>
 		</div>
 	`;
 	return topArtistsContainer;
