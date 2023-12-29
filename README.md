@@ -1,6 +1,6 @@
-# Spotify Genres
+# Spicetify Genres
 
-Spotify Genres is an extension for Spicetify based on the extension by Tetrax-10 and soapu.
+Spicetify Genres is an extension for Spicetify based on the extension by Tetrax-10 and soapu.
 
 <p align="center">
   <img alt="preview" src="./preview.png" />
@@ -8,7 +8,7 @@ Spotify Genres is an extension for Spicetify based on the extension by Tetrax-10
 
 ## Install
 
-Download the latest version of genres.js from the [Releases](https://github.com/LucasOe/spotify-genres/releases). Copy genres.js into your Spicetify extensions directory:
+Download the latest version of genres.js from the [Releases](https://github.com/LucasOe/spicetify-genres/releases). Copy genres.js into your Spicetify extensions directory:
 | **Platform**   | **Path**                                                                             |
 |----------------|--------------------------------------------------------------------------------------|
 | **Linux**      | `~/.config/spicetify/Extensions` or `$XDG_CONFIG_HOME/.config/spicetify/Extensions/` |
