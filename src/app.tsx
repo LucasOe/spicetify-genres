@@ -31,7 +31,7 @@ async function injectGenres(genreContainer: HTMLDivElement) {
 	// Append genreTag
 	artistGenres.forEach(async (genre) => {
 		let genreTag = document.createElement("a");
-		genreTag.className = "TypeElement-finale-textSubdued-type genre-tag";
+		genreTag.className = "TextElement-marginal-textSubdued-text encore-text-marginal genre-tag";
 		genreTag.innerHTML = camelize(genre);
 		genreTag.onclick = async () => {
 			await clickGenreTag(genre);
@@ -123,7 +123,7 @@ async function createRelated(data: MusicalystData): Promise<HTMLDivElement> {
 	genreContainer.className = "related-genres-container";
 	data.relatedGenres.forEach((relatedGenre) => {
 		let genreTag = document.createElement("a");
-		genreTag.className = "TypeElement-finale-textSubdued-type genre-tag";
+		genreTag.className = "TextElement-marginal-textSubdued-text encore-text-marginal genre-tag";
 		genreTag.innerHTML = camelize(relatedGenre.genre);
 		genreTag.onclick = async () => {
 			await clickGenreTag(relatedGenre.genre);
