@@ -72,7 +72,7 @@ async function clickGenreTag(genre: string) {
 
 async function fetchMusicalyst(genre: string): Promise<MusicalystData | void> {
 	let escaped = replaceAll(replaceAll(genre, " ", "-"), ":", "");
-	let url = `https://serena-williams-certified-moment.github.io/gay-furry-porn/${escaped}.json`;
+	let url = `https://lucasoe.github.io/spicetify-genres/api/${escaped}.json`;
 	try {
 		let initialRequest = await fetch(url);
 		let response = await initialRequest.json();
