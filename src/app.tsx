@@ -59,6 +59,21 @@ async function fetchGenres(artistURI: string): Promise<string[]> {
 }
 
 async function clickGenreTag(genre: string) {
+	// Show Skeleton while loading
+	let skeleton = document.createElement("div");
+	skeleton.className = "genre-description-container";
+	skeleton.innerHTML = /* HTML */ `
+		<div class="skeleton" style="height: 144px;"></div>
+		<div class="skeleton" style="height: 86px;"></div>
+		<div class="skeleton" style="height: calc(75vh - 375px);"></div>
+	`;
+
+	Spicetify.PopupModal.display({
+		title: camelize(genre),
+		content: skeleton,
+		isLarge: true,
+	});
+
 	let playlist = await fetchSpotifyPlaylistURI(genre);
 	let data = await fetchMusicalyst(genre);
 	if (!data) return;
