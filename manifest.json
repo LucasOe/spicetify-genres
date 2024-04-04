@@ -1,6 +1,6 @@
 [
 	{
-		"name": "Waht's That Genre?",
+		"name": "What's That Genre?",
 		"description": "Displays the artist's genre, a brief description, similar genres, the \"The Sound of\" playlist, and top artists in that genre.",
 		"preview": "preview.png",
 		"main": "dist/whatsThatGenre.js",
