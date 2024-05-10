@@ -41,7 +41,7 @@ async function injectGenres(genreContainer: HTMLDivElement) {
 	});
 
 	// Append genreContainer
-	let infoContainer = await waitForElement("div.main-trackInfo-container", 3000);
+	let infoContainer = await waitForElement(".main-nowPlayingWidget-trackInfo", 3000);
 	infoContainer?.appendChild(genreContainer);
 }
 
