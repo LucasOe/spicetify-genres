@@ -89,8 +89,9 @@
 		}
 
 		.main-gridContainer-gridContainer {
-			--column-count: 4;
-			--grid-gap: 16px;
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 16px;
 
 			.main-card-card {
 				padding: 12px;
