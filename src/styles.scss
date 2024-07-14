@@ -110,7 +110,7 @@
 
 		.main-gridContainer-gridContainer {
 			display: grid;
-			grid-template-columns: repeat(4, 1fr);
+			grid-template-columns: repeat(4, minmax(0, 1fr));
 			gap: 16px;
 
 			.main-card-card {
@@ -118,6 +118,10 @@
 
 				.main-cardImage-imageWrapper {
 					margin-bottom: 8px;
+					-webkit-box-shadow: none;
+					box-shadow: none;
+					border-radius: 4px;
+					overflow: hidden;
 
 					.main-cardImage-image {
 						height: auto;
@@ -130,6 +134,7 @@
 					color: var(--spice-text);
 					padding-block-end: 0px;
 					line-height: 1em;
+					overflow-wrap: break-word;
 				}
 			}
 		}
