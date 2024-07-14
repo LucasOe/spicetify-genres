@@ -1,9 +1,13 @@
+import marquee from "vanilla-marquee";
 import "./styles.scss";
 import { MusicalystData } from "./types/musicalyst";
-import { camelize, replaceAll, waitForElement } from "./utils";
+import { camelize, debounce, replaceAll, waitForElement } from "./utils";
 
 // https://developer.spotify.com/documentation/web-api
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/spotify-api/index.d.ts
+
+let marq: marquee | undefined;
+let cachedGenres: string[];
 
 export default async function main() {
 	while (!Spicetify?.showNotification) {
@@ -17,28 +21,74 @@ export default async function main() {
 	Spicetify.Player.addEventListener("songchange", async () => {
 		await injectGenres(genreContainer);
 	});
+
+	// Remove or add marquee on resize
+	window.addEventListener("resize", () => {
+		// Make genreContainer a marquee if there is a line break
+		if (!marq && genreContainer.offsetHeight > 22) {
+			genreContainer.classList.add("marquee");
+			marq = new marquee(genreContainer, {
+				speed: 50,
+				gap: 0,
+				duplicated: true,
+				startVisible: true,
+				pauseOnHover: true,
+				delayBeforeStart: 0,
+			});
+		}
+	});
+	window.addEventListener(
+		"resize",
+		debounce(async () => {
+			await injectGenres(genreContainer, cachedGenres);
+		})
+	);
 }
 
-async function injectGenres(genreContainer: HTMLDivElement) {
+async function injectGenres(genreContainer: HTMLDivElement, genres?: string[]) {
 	let artist_uri = getArtistsURI();
 	if (!artist_uri) return;
 
-	let artistGenres = await fetchGenres(artist_uri);
+	let artistGenres = genres ?? (await fetchGenres(artist_uri));
+	cachedGenres = artistGenres;
 
 	// Clear elements inside genreContainer
+	genreContainer.className = "main-trackInfo-genres";
 	genreContainer.innerHTML = "";
+	marq = undefined;
 
 	// Append genreTag
-	artistGenres.forEach(async (genre) => {
+	for (const genre of artistGenres) {
 		let genreTag = document.createElement("a");
 		genreTag.className = "TextElement-marginal-textSubdued-text encore-text-marginal genre-tag";
 		genreTag.innerHTML = camelize(genre);
-		genreTag.onclick = async () => {
-			await clickGenreTag(genre);
-		};
+		genreTag.setAttribute("genre", genre);
 
 		genreContainer.appendChild(genreTag);
-	});
+	}
+
+	// Make genreContainer a marquee if there is a line break
+	if (genreContainer.offsetHeight > 22) {
+		genreContainer.classList.add("marquee");
+		marq = new marquee(genreContainer, {
+			speed: 50,
+			gap: 0,
+			duplicated: true,
+			startVisible: true,
+			pauseOnHover: true,
+			delayBeforeStart: 0,
+		});
+	}
+
+	// References are lost if a marquee is created, that's why we use getElementsByClassName
+	for (const genreTag of document.getElementsByClassName("genre-tag")) {
+		const genre = genreTag.getAttribute("genre");
+		if (genre) {
+			genreTag.addEventListener("click", () => {
+				clickGenreTag(genre);
+			});
+		}
+	}
 
 	// Append genreContainer
 	let infoContainer = await waitForElement(".main-nowPlayingWidget-trackInfo", 3000);
