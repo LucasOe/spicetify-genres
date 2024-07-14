@@ -39,3 +39,11 @@ export function camelize(str: string): string {
 export function replaceAll(str: string, find: string, replace: string) {
 	return str.replace(new RegExp(find, "g"), replace);
 }
+
+export function debounce(fn: Function, ms = 300) {
+	let timeoutId: ReturnType<typeof setTimeout>;
+	return function (this: any, ...args: any[]) {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => fn.apply(this, args), ms);
+	};
+}
