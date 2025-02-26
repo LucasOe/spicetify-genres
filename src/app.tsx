@@ -73,29 +73,36 @@ async function injectGenres(genreContainer: HTMLDivElement, genres?: string[]) {
 	}
 
 	// Make genreContainer a marquee if there is a line break
-	if (genreContainer.offsetHeight > 22) {
-		genreContainer.classList.add("marquee");
-		marq = new marquee(genreContainer, {
-			speed: 50,
-			gap: 0,
-			duplicated: true,
-			startVisible: true,
-			pauseOnHover: true,
-			delayBeforeStart: 0,
-		});
+	// We observe when the genreContainer is rendered so we guarrantee that offsetHeight is never 0
+	const resizeObserver = new ResizeObserver(entries => {
 
-		// References are lost if a marquee is created, that's why we use getElementsByClassName
-		for (const genreTag of document.getElementsByClassName("genre-tag")) {
-			const genre = genreTag.getAttribute("genre");
-			if (genre) {
-				//@ts-ignore
-				genreTag.removeEventListener("click", clickGenreTag);
-				genreTag.addEventListener("click", () => {
-					clickGenreTag(genre);
-				});
+		if (genreContainer.offsetHeight > 22) {
+			genreContainer.classList.add("marquee");
+			marq = new marquee(genreContainer, {
+				speed: 50,
+				gap: 0,
+				duplicated: true,
+				startVisible: true,
+				pauseOnHover: true,
+				delayBeforeStart: 0,
+			});
+	
+			// References are lost if a marquee is created, that's why we use getElementsByClassName
+			for (const genreTag of document.getElementsByClassName("genre-tag")) {
+				const genre = genreTag.getAttribute("genre");
+				if (genre) {
+					//@ts-ignore
+					genreTag.removeEventListener("click", clickGenreTag);
+					genreTag.addEventListener("click", () => {
+						clickGenreTag(genre);
+					});
+				}
 			}
 		}
-	}
+
+		resizeObserver.disconnect();
+	})
+	resizeObserver.observe(genreContainer);
 
 	// Append genreContainer
 	let infoContainer = await waitForElement(".main-nowPlayingWidget-trackInfo", 3000);
@@ -134,7 +141,7 @@ async function clickGenreTag(genre: string) {
 	let playlist = await fetchSpotifyPlaylistURI(genre);
 	let data = await fetchMusicalyst(genre);
 	if (!data) return;
-	
+
 	// Check if the skeleton still exist to display the content
 	if (document.querySelector("div.genre-description-container"))
 		Spicetify.PopupModal.display({
