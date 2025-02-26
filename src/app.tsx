@@ -17,7 +17,7 @@ export default async function main() {
 	let genreContainer = document.createElement("div");
 	genreContainer.className = "main-trackInfo-genres";
 
-	await injectGenres(genreContainer);
+	// await injectGenres(genreContainer);
 	Spicetify.Player.addEventListener("songchange", async () => {
 		await injectGenres(genreContainer);
 	});
@@ -43,6 +43,8 @@ export default async function main() {
 			await injectGenres(genreContainer, cachedGenres);
 		})
 	);
+
+	window.dispatchEvent(new Event("resize"));
 }
 
 async function injectGenres(genreContainer: HTMLDivElement, genres?: string[]) {
@@ -63,6 +65,9 @@ async function injectGenres(genreContainer: HTMLDivElement, genres?: string[]) {
 		genreTag.className = "TextElement-marginal-textSubdued-text encore-text-marginal genre-tag";
 		genreTag.innerHTML = camelize(genre);
 		genreTag.setAttribute("genre", genre);
+		genreTag.addEventListener("click", () => {
+			clickGenreTag(genre);
+		});
 
 		genreContainer.appendChild(genreTag);
 	}
@@ -78,15 +83,17 @@ async function injectGenres(genreContainer: HTMLDivElement, genres?: string[]) {
 			pauseOnHover: true,
 			delayBeforeStart: 0,
 		});
-	}
 
-	// References are lost if a marquee is created, that's why we use getElementsByClassName
-	for (const genreTag of document.getElementsByClassName("genre-tag")) {
-		const genre = genreTag.getAttribute("genre");
-		if (genre) {
-			genreTag.addEventListener("click", () => {
-				clickGenreTag(genre);
-			});
+		// References are lost if a marquee is created, that's why we use getElementsByClassName
+		for (const genreTag of document.getElementsByClassName("genre-tag")) {
+			const genre = genreTag.getAttribute("genre");
+			if (genre) {
+				//@ts-ignore
+				genreTag.removeEventListener("click", clickGenreTag);
+				genreTag.addEventListener("click", () => {
+					clickGenreTag(genre);
+				});
+			}
 		}
 	}
 
