@@ -134,12 +134,14 @@ async function clickGenreTag(genre: string) {
 	let playlist = await fetchSpotifyPlaylistURI(genre);
 	let data = await fetchMusicalyst(genre);
 	if (!data) return;
-
-	Spicetify.PopupModal.display({
-		title: camelize(genre),
-		content: await createContent(data, playlist),
-		isLarge: true,
-	});
+	
+	// Check if the skeleton still exist to display the content
+	if (document.querySelector("div.genre-description-container"))
+		Spicetify.PopupModal.display({
+			title: camelize(genre),
+			content: await createContent(data, playlist),
+			isLarge: true,
+		});
 }
 
 async function fetchMusicalyst(genre: string): Promise<MusicalystData | void> {
