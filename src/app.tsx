@@ -90,7 +90,6 @@ async function injectGenres(genreContainer: HTMLDivElement, genres?: string[]) {
 			for (const genreTag of document.getElementsByClassName("genre-tag")) {
 				const genre = genreTag.getAttribute("genre");
 				if (genre) {
-					genreTag.removeEventListener("click", () => clickGenreTag(genre));
 					genreTag.addEventListener("click", () => clickGenreTag(genre));
 				}
 			}
@@ -120,21 +119,19 @@ async function fetchGenres(artistURI: string): Promise<string[]> {
 
 async function clickGenreTag(genre: string) {
 	// Show Skeleton while loading
-	setTimeout(() => {
-		let skeleton = document.createElement("div");
-		skeleton.className = "genre-description-container";
-		skeleton.innerHTML = /* HTML */ `
-			<div class="skeleton" style="height: 144px;"></div>
-			<div class="skeleton" style="height: 86px;"></div>
-			<div class="skeleton" style="height: calc(75vh - 375px);"></div>
-		`;
+	let skeleton = document.createElement("div");
+	skeleton.className = "genre-description-container";
+	skeleton.innerHTML = /* HTML */ `
+		<div class="skeleton" style="height: 144px;"></div>
+		<div class="skeleton" style="height: 86px;"></div>
+		<div class="skeleton" style="height: calc(75vh - 375px);"></div>
+	`;
 
-		Spicetify.PopupModal.display({
-			title: camelize(genre),
-			content: skeleton,
-			isLarge: true,
-		});
-	}, 100);
+	Spicetify.PopupModal.display({
+		title: camelize(genre),
+		content: skeleton,
+		isLarge: true,
+	});
 
 	let playlist = await fetchSpotifyPlaylistURI(genre);
 	let data = await fetchMusicalyst(genre);
@@ -210,6 +207,7 @@ async function createRelated(data: MusicalystData): Promise<HTMLDivElement> {
 		genreTag.className = "TextElement-marginal-textSubdued-text encore-text-marginal genre-tag";
 		genreTag.innerHTML = camelize(relatedGenre.genre);
 		genreTag.onclick = async () => {
+			await new Promise(resolve => setTimeout(resolve, 100));
 			await clickGenreTag(relatedGenre.genre);
 		};
 
