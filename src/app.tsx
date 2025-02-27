@@ -113,7 +113,7 @@ function getArtistsURI(): string | null {
 
 async function fetchGenres(artistURI: string): Promise<string[]> {
 	const res: SpotifyApi.SingleArtistResponse = await Spicetify.CosmosAsync.get(
-		`https://api.spotify.com/v1/artists/${artistURI}`
+		`https://api.spotify.com/v1/artists/${artistURI}?locale=EN_en`
 	);
 	return res.genres;
 }
