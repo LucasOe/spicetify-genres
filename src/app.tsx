@@ -74,8 +74,7 @@ async function injectGenres(genreContainer: HTMLDivElement, genres?: string[]) {
 
 	// Make genreContainer a marquee if there is a line break
 	// We observe when the genreContainer is rendered so we guarrantee that offsetHeight is never 0
-	const resizeObserver = new ResizeObserver(entries => {
-
+	const resizeObserver = new ResizeObserver(() => {
 		if (genreContainer.offsetHeight > 22) {
 			genreContainer.classList.add("marquee");
 			marq = new marquee(genreContainer, {
@@ -86,22 +85,19 @@ async function injectGenres(genreContainer: HTMLDivElement, genres?: string[]) {
 				pauseOnHover: true,
 				delayBeforeStart: 0,
 			});
-	
+
 			// References are lost if a marquee is created, that's why we use getElementsByClassName
 			for (const genreTag of document.getElementsByClassName("genre-tag")) {
 				const genre = genreTag.getAttribute("genre");
 				if (genre) {
-					//@ts-ignore
-					genreTag.removeEventListener("click", clickGenreTag);
-					genreTag.addEventListener("click", () => {
-						clickGenreTag(genre);
-					});
+					genreTag.removeEventListener("click", () => clickGenreTag(genre));
+					genreTag.addEventListener("click", () => clickGenreTag(genre));
 				}
 			}
 		}
 
 		resizeObserver.disconnect();
-	})
+	});
 	resizeObserver.observe(genreContainer);
 
 	// Append genreContainer
