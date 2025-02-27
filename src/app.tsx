@@ -262,7 +262,7 @@ async function createTopArtists(data: MusicalystData): Promise<HTMLDivElement> {
 	let topArtistsContainer = document.createElement("div");
 	topArtistsContainer.innerHTML = /* HTML */ `
 		<div class="description-container">
-			<h3 class="main-type-alto" as="h3">Top Artists</h3>
+			<h2 class="main-type-alto" as="h2">Top Artists</h2>
 			<div class="main-gridContainer-gridContainer">${artists()}</div>
 		</div>
 	`;
