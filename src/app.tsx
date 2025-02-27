@@ -136,15 +136,20 @@ async function clickGenreTag(genre: string) {
 
 	let playlist = await fetchSpotifyPlaylistURI(genre);
 	let data = await fetchMusicalyst(genre);
-	if (!data) return;
+
+	if (!data) {
+		Spicetify.PopupModal.hide();
+		return;
+	}
 
 	// Check if the skeleton still exist to display the content
-	if (document.querySelector("div.genre-description-container"))
+	if (document.querySelector("div.genre-description-container")) {
 		Spicetify.PopupModal.display({
 			title: camelize(genre),
 			content: await createContent(data, playlist),
 			isLarge: true,
 		});
+	}
 }
 
 async function fetchMusicalyst(genre: string): Promise<MusicalystData | void> {
@@ -155,7 +160,7 @@ async function fetchMusicalyst(genre: string): Promise<MusicalystData | void> {
 		let response = await initialRequest.json();
 		return response.pageProps;
 	} catch {
-		Spicetify.showNotification(`Couldn't find genre on Musicalyst: ${genre}`);
+		Spicetify.showNotification(`Couldn't find genre on Musicalyst: ${camelize(genre)}`);
 		return;
 	}
 }
