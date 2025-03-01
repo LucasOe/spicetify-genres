@@ -171,7 +171,6 @@ async function fetchSpotifyPlaylistURI(genre: string): Promise<SpotifyApi.Single
 	);
 
 	for (const item of searchResponse.playlists.items) {
-		console.log(item.name.toLowerCase(), name.toLowerCase());
 		if (item.owner.id == "thesoundsofspotify" && item.name.toLowerCase() == name.toLowerCase()) {
 			return Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/playlists/${item.id}`);
 		}
