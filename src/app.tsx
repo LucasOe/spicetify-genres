@@ -167,11 +167,12 @@ async function fetchMusicalyst(genre: string): Promise<MusicalystData | void> {
 async function fetchSpotifyPlaylistURI(genre: string): Promise<SpotifyApi.SinglePlaylistResponse | void> {
 	let name = `The Sound of ${camelize(genre)}`;
 	const searchResponse: SpotifyApi.PlaylistSearchResponse = await Spicetify.CosmosAsync.get(
-		`https://api.spotify.com/v1/search?q=${encodeURIComponent(name)}&type=playlist`
+		`https://api.spotify.com/v1/search?q=${encodeURIComponent(name)}&type=playlist&limit=50`
 	);
 
 	for (const item of searchResponse.playlists.items) {
-		if (item.owner.id == "thesoundsofspotify" && item.name == name) {
+		console.log(item.name.toLowerCase(), name.toLowerCase());
+		if (item.owner.id == "thesoundsofspotify" && item.name.toLowerCase() == name.toLowerCase()) {
 			return Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/playlists/${item.id}`);
 		}
 	}
@@ -207,7 +208,7 @@ async function createRelated(data: MusicalystData): Promise<HTMLDivElement> {
 		genreTag.className = "TextElement-marginal-textSubdued-text encore-text-marginal genre-tag";
 		genreTag.innerHTML = camelize(relatedGenre.genre);
 		genreTag.onclick = async () => {
-			await new Promise(resolve => setTimeout(resolve, 100));
+			await new Promise((resolve) => setTimeout(resolve, 100));
 			await clickGenreTag(relatedGenre.genre);
 		};
 
