@@ -1,6 +1,6 @@
 import marquee from "vanilla-marquee";
 import "./styles.scss";
-import { MusicalystData } from "./types/musicalyst";
+import type { MusicalystData } from "./types/musicalyst";
 import { camelize, debounce, replaceAll, waitForElement } from "./utils";
 
 // https://developer.spotify.com/documentation/web-api
@@ -14,7 +14,7 @@ export default async function main() {
 		await new Promise((resolve) => setTimeout(resolve, 100));
 	}
 
-	let genreContainer = document.createElement("div");
+	const genreContainer = document.createElement("div");
 	genreContainer.className = "main-trackInfo-genres";
 
 	// await injectGenres(genreContainer);
@@ -48,10 +48,10 @@ export default async function main() {
 }
 
 async function injectGenres(genreContainer: HTMLDivElement, genres?: string[]) {
-	let artist_uri = getArtistsURI();
+	const artist_uri = getArtistsURI();
 	if (!artist_uri) return;
 
-	let artistGenres = genres ?? (await fetchGenres(artist_uri));
+	const artistGenres = genres ?? (await fetchGenres(artist_uri));
 	cachedGenres = artistGenres;
 
 	// Clear elements inside genreContainer
@@ -61,7 +61,7 @@ async function injectGenres(genreContainer: HTMLDivElement, genres?: string[]) {
 
 	// Append genreTag
 	for (const genre of artistGenres) {
-		let genreTag = document.createElement("a");
+		const genreTag = document.createElement("a");
 		genreTag.className = "TextElement-marginal-textSubdued-text encore-text-marginal genre-tag";
 		genreTag.innerHTML = camelize(genre);
 		genreTag.setAttribute("genre", genre);
@@ -100,12 +100,12 @@ async function injectGenres(genreContainer: HTMLDivElement, genres?: string[]) {
 	resizeObserver.observe(genreContainer);
 
 	// Append genreContainer
-	let infoContainer = await waitForElement(".main-nowPlayingWidget-trackInfo", 3000);
+	const infoContainer = await waitForElement(".main-nowPlayingWidget-trackInfo", 3000);
 	infoContainer?.appendChild(genreContainer);
 }
 
 function getArtistsURI(): string | null {
-	let data = Spicetify.Player.data;
+	const data = Spicetify.Player.data;
 	if (!data) return null;
 	return data.item.metadata.artist_uri.split(":")[2];
 }
@@ -119,7 +119,7 @@ async function fetchGenres(artistURI: string): Promise<string[]> {
 
 async function clickGenreTag(genre: string) {
 	// Show Skeleton while loading
-	let skeleton = document.createElement("div");
+	const skeleton = document.createElement("div");
 	skeleton.className = "genre-description-container";
 	skeleton.innerHTML = /* HTML */ `
 		<div class="skeleton" style="height: 144px;"></div>
@@ -133,8 +133,8 @@ async function clickGenreTag(genre: string) {
 		isLarge: true,
 	});
 
-	let playlist = await fetchSpotifyPlaylistURI(genre);
-	let data = await fetchMusicalyst(genre);
+	const playlist = await fetchSpotifyPlaylistURI(genre);
+	const data = await fetchMusicalyst(genre);
 
 	if (!data) {
 		Spicetify.PopupModal.hide();
@@ -151,12 +151,12 @@ async function clickGenreTag(genre: string) {
 	}
 }
 
-async function fetchMusicalyst(genre: string): Promise<MusicalystData | void> {
-	let escaped = replaceAll(replaceAll(genre, " ", "-"), ":", "");
-	let url = `https://lucasoe.github.io/spicetify-genres/api/${escaped}.json`;
+async function fetchMusicalyst(genre: string): Promise<MusicalystData | undefined> {
+	const escaped = replaceAll(replaceAll(genre, " ", "-"), ":", "");
+	const url = `https://lucasoe.github.io/spicetify-genres/api/${escaped}.json`;
 	try {
-		let initialRequest = await fetch(url);
-		let response = await initialRequest.json();
+		const initialRequest = await fetch(url);
+		const response = await initialRequest.json();
 		return response.pageProps;
 	} catch {
 		Spicetify.showNotification(`Couldn't find genre on Musicalyst: ${camelize(genre)}`);
@@ -164,14 +164,14 @@ async function fetchMusicalyst(genre: string): Promise<MusicalystData | void> {
 	}
 }
 
-async function fetchSpotifyPlaylistURI(genre: string): Promise<SpotifyApi.SinglePlaylistResponse | void> {
-	let name = `The Sound of ${camelize(genre)}`;
+async function fetchSpotifyPlaylistURI(genre: string): Promise<SpotifyApi.SinglePlaylistResponse | undefined> {
+	const name = `The Sound of ${camelize(genre)}`;
 	const searchResponse: SpotifyApi.PlaylistSearchResponse = await Spicetify.CosmosAsync.get(
 		`https://api.spotify.com/v1/search?q=${encodeURIComponent(name)}&type=playlist&limit=50`
 	);
 
 	for (const item of searchResponse.playlists.items) {
-		if (item.owner.id == "thesoundsofspotify" && item.name.toLowerCase() == name.toLowerCase()) {
+		if (item.owner.id === "thesoundsofspotify" && item.name.toLowerCase() === name.toLowerCase()) {
 			return Spicetify.CosmosAsync.get(`https://api.spotify.com/v1/playlists/${item.id}`);
 		}
 	}
@@ -182,9 +182,9 @@ async function fetchSpotifyPlaylistURI(genre: string): Promise<SpotifyApi.Single
 
 async function createContent(
 	data: MusicalystData,
-	playlist: SpotifyApi.PlaylistObjectFull | void
+	playlist: SpotifyApi.PlaylistObjectFull | undefined
 ): Promise<HTMLDivElement> {
-	let contentContainer = document.createElement("div");
+	const contentContainer = document.createElement("div");
 	contentContainer.className = "genre-description-container";
 	contentContainer.appendChild(await createDescription(data));
 	contentContainer.appendChild(await createRelated(data));
@@ -194,16 +194,16 @@ async function createContent(
 }
 
 async function createDescription(data: MusicalystData): Promise<HTMLDivElement> {
-	let descriptionContainer = document.createElement("div");
+	const descriptionContainer = document.createElement("div");
 	descriptionContainer.innerHTML = `<p>${data.genresAdvancedInfo.description}</p>`;
 	return descriptionContainer;
 }
 
 async function createRelated(data: MusicalystData): Promise<HTMLDivElement> {
-	let genreContainer = document.createElement("div");
+	const genreContainer = document.createElement("div");
 	genreContainer.className = "related-genres-container";
 	data.relatedGenres.forEach((relatedGenre) => {
-		let genreTag = document.createElement("div");
+		const genreTag = document.createElement("div");
 		genreTag.className = "TextElement-marginal-textSubdued-text encore-text-marginal genre-tag";
 		genreTag.innerHTML = camelize(relatedGenre.genre);
 		genreTag.onclick = async () => {
@@ -218,7 +218,7 @@ async function createRelated(data: MusicalystData): Promise<HTMLDivElement> {
 }
 
 async function createPlaylist(playlist: SpotifyApi.PlaylistObjectFull): Promise<HTMLDivElement> {
-	let playlistContainer = document.createElement("div");
+	const playlistContainer = document.createElement("div");
 	playlistContainer.innerHTML = /* HTML */ `
 		<a href=${playlist.uri} onclick="Spicetify.PopupModal.hide()" class="playlist-container">
 			<img src="${playlist.images[0].url}" class="playlist-image" />
@@ -234,10 +234,10 @@ async function createPlaylist(playlist: SpotifyApi.PlaylistObjectFull): Promise<
 }
 
 async function createTopArtists(data: MusicalystData): Promise<HTMLDivElement> {
-	let artists = () => {
+	const artists = () => {
 		let result = "";
 		data.topArtists.forEach(async (artist) => {
-			let artistURI = `spotify:artist:${artist.id}`;
+			const artistURI = `spotify:artist:${artist.id}`;
 			result += /* HTML */ `
 				<a href=${artistURI} onclick="Spicetify.PopupModal.hide()" class="main-card-card">
 					<div class="main-cardImage-imageWrapper">
@@ -257,7 +257,7 @@ async function createTopArtists(data: MusicalystData): Promise<HTMLDivElement> {
 		return result;
 	};
 
-	let topArtistsContainer = document.createElement("div");
+	const topArtistsContainer = document.createElement("div");
 	topArtistsContainer.innerHTML = /* HTML */ `
 		<div class="description-container">
 			<h2 class="main-type-alto" as="h2">Top Artists</h2>

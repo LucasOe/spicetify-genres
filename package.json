@@ -9,13 +9,13 @@
 	},
 	"license": "MIT",
 	"devDependencies": {
-		"@types/react": "^18.2.42",
-		"@types/react-dom": "^18.2.17",
-		"prettier": "^3.5.2",
+		"@types/react": "19.2.0",
+		"@types/react-dom": "19.2.0",
+		"prettier": "3.6.2",
 		"spicetify-creator": "^1.0.17"
 	},
 	"dependencies": {
-		"@types/spotify-api": "^0.0.25",
+		"@types/spotify-api": "0.0.25",
 		"vanilla-marquee": "^1.1.2"
 	}
 }
