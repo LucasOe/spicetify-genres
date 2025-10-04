@@ -136,7 +136,7 @@ async function clickGenreTag(genre: string) {
 	const playlist = await fetchSpotifyPlaylistURI(genre);
 	const data = await fetchMusicalyst(genre);
 
-	if (!data) {
+	if (!data || !playlist) {
 		Spicetify.PopupModal.hide();
 		return;
 	}
@@ -159,7 +159,7 @@ async function fetchMusicalyst(genre: string): Promise<MusicalystData | undefine
 		const response = await initialRequest.json();
 		return response.pageProps;
 	} catch {
-		Spicetify.showNotification(`Couldn't find genre on Musicalyst: ${camelize(genre)}`);
+		Spicetify.showNotification(`Couldn't find genre on Musicalyst: ${camelize(genre)}`, true);
 		return;
 	}
 }
@@ -176,7 +176,7 @@ async function fetchSpotifyPlaylistURI(genre: string): Promise<SpotifyApi.Single
 		}
 	}
 
-	Spicetify.showNotification(`Couldn't find playlist: ${name}`);
+	Spicetify.showNotification(`Couldn't find playlist: ${name}`, true);
 	return;
 }
 
