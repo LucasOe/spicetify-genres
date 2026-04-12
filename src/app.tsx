@@ -166,8 +166,10 @@ async function fetchMusicalyst(genre: string): Promise<MusicalystData | undefine
 
 async function fetchSpotifyPlaylistURI(genre: string): Promise<SpotifyApi.SinglePlaylistResponse | undefined> {
 	const name = `The Sound of ${camelize(genre)}`;
+	// The limit parameter maximum value has been reduced from 50 to 10
+	// https://developer.spotify.com/documentation/web-api/references/changes/february-2026
 	const searchResponse: SpotifyApi.PlaylistSearchResponse = await Spicetify.CosmosAsync.get(
-		`https://api.spotify.com/v1/search?q=${encodeURIComponent(name)}&type=playlist&limit=50`
+		`https://api.spotify.com/v1/search?q=${encodeURIComponent(name)}&type=playlist&limit=10`
 	);
 
 	for (const item of searchResponse.playlists.items) {
@@ -225,7 +227,7 @@ async function createPlaylist(playlist: SpotifyApi.PlaylistObjectFull): Promise<
 			<div class="playlist-description">
 				<h1 class="playlist-title">${playlist.name}</h1>
 				<p class="playlist-stats">
-					${playlist.owner.display_name} • ${playlist.followers.total} likes • ${playlist.tracks.total} songs
+					${playlist.owner.display_name} • ${playlist.followers.total} likes • ${playlist.items?.total || 0} songs
 				</p>
 			</div>
 		</a>
